@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/development/Weighted-Interval/main.cpp" "C:/development/Weighted-Interval/cmake-build-debug/CMakeFiles/Weighted_Interval.dir/main.cpp.obj"
+  "C:/development/Weighted_Interval/main.cpp" "C:/development/Weighted_Interval/cmake-build-debug/CMakeFiles/Weighted_Interval.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

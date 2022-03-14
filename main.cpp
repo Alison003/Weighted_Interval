@@ -7,48 +7,55 @@
 
 using namespace std;
 
-struct Meeting{int start; int finish; int value;};
+struct Task{int start; int finish; int value;};
+vector<Task> tasks;
+vector<int> p_vals;
+map<int,int> M;
 
-void parse_file(vector<Meeting> &meetings, string fileName);
-void sort(vector<Meeting> &meetings);
-void p_values(vector<Meeting> &meetings, vector<int> &p_vals);
-void m_compute_opt(vector<int> &p_vals);
+
+void parse_file(const string& fileName);
+void sort();
+void p_values();
+int m_compute_opt(int n);
+void find_solution(int n);
+
 
 int main() {
-    //parse file
-    vector<Meeting> meetings;
-    parse_file(meetings, "data2.csv");
+    //get input
+    string file;
 
-    //sort meetings
-    vector<Meeting> sorted;
-    sort(meetings);
+    cout << "Please choose a data file: data.csv or data2.csv" << endl;
+    cin >> file;
+
+    //parse file
+    parse_file(file);
+
+    //sort tasks
+    sort();
 
     //calculate p-values
-    vector<int> p_vals;
-    p_vals.reserve(meetings.size());
-    for (int i = 0; i < meetings.size(); i++){
+    p_vals.reserve(tasks.size());
+    for (int i = 0; i < tasks.size(); i++){
         p_vals.push_back(0);
     }
-    p_values(meetings, p_vals);
+    p_values();
 
-    //Initialization
-    map<int,int> M;
-    for (int i = 0; i < p_vals.size(); i++){
-        M.insert(pair<int, int>(i, -1));
-    }
-    for (int i = 0; i < p_vals.size(); i++){
-        if (p_vals[i] == 0){
-            M.insert(pair<int, int>(i, 0));
-        }
-    }
 
     //Memoization
-    m_compute_opt(p_vals);
+    for (int i = 0; i <= tasks.size(); i++){
+        M[i] = -1;
+    }
+    m_compute_opt(tasks.size());
+    cout << "The optimal weight is: " << M[tasks.size()] << endl;
+
+    //Solution
+    cout << "Optimal solution includes:" << endl;
+    find_solution(tasks.size());
     return 0;
 }
 
-//Parses file and reads in meeting times and values
-void parse_file(vector<Meeting> &meetings, string fileName){
+//Parses file and reads in task times and values
+void parse_file(const string& fileName){
     ifstream file;
     file.open(fileName);
     while(!file.eof()){
@@ -76,34 +83,32 @@ void parse_file(vector<Meeting> &meetings, string fileName){
         while(s >> input){
             value += input;
         }
-        Meeting new_m = {stoi(start), stoi(finish), stoi(value)};
-        meetings.push_back(new_m);
+        Task new_t = {stoi(start), stoi(finish), stoi(value)};
+        tasks.push_back(new_t);
     }
 }
 
-//Sorts meetings based on finish time
-void sort(vector<Meeting> &meetings){
-    vector<Meeting> sorted;
-    for(int i = 1; i < meetings.size(); i++) {
-        Meeting m = meetings[i];
+//Sorts tasks based on finish time
+void sort(){
+    vector<Task> sorted;
+    for(int i = 1; i < tasks.size(); i++) {
+        Task t = tasks[i];
         int j = i-1;
-        while (j >=0 && meetings[j].finish > m.finish) {
-            meetings[j+1] = meetings[j];
+        while (j >=0 && tasks[j].finish > t.finish) {
+            tasks[j + 1] = tasks[j];
             j = j - 1;
         }
-        meetings[j + 1] = m;
+        tasks[j + 1] = t;
     }
 }
 
 
-//calculates p-values of meetings
-void p_values(vector<Meeting> &meetings, vector<int> &p_vals){
-    for (int i = meetings.size() - 1; i >= 0; i--){
+//calculates p-values of tasks
+void p_values(){
+    for (int i = tasks.size() - 1; i >= 0; i--){
         for (int j = i - 1; j >= 0; j--){
-            int finish = meetings[j].finish;
-            int start = meetings[i].start;
-            if (meetings[j].finish <= meetings[i].start){
-                p_vals[i] = meetings[j].value;
+            if (tasks[j].finish <= tasks[i].start){
+                p_vals[i] = tasks[j].value;
                 break;
             }
         }
@@ -111,8 +116,27 @@ void p_values(vector<Meeting> &meetings, vector<int> &p_vals){
 }
 
 //Memoization
-void m_compute_opt(vector<int> &p_vals){
+int m_compute_opt(int n){
+    if (n == 0){
+        return 0;
+    } else if (M[n] != -1){
+        return M[n];
+    }else {
+        M[n] = max(tasks[n - 1].value + m_compute_opt(p_vals[n - 1]), m_compute_opt(n - 1));
+    }
+    return M[n];
+}
 
+//Solution
+void find_solution(int n){
+    if (n ==0){
+        cout << "" << endl;
+    }else if (tasks[n - 1].value + M[p_vals[n - 1]] > M[n - 1]){
+        cout << "Task " << n << endl;
+        find_solution(p_vals[n-1]);
+    }else{
+        find_solution(n-1);
+    }
 }
 
 
