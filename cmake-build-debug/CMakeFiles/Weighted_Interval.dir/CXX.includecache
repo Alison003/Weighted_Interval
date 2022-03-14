@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/development/Weighted-Interval/main.cpp
+iostream
+-
+fstream
+-
+string
+-
+sstream
+-
+vector
+-
+map
+-
+
