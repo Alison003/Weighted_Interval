@@ -8,7 +8,7 @@
 using namespace std;
 
 struct Task{int start; int finish; int value;};
-vector<Task> tasks;
+vector<Task> size;
 vector<int> p_vals;
 map<int,int> M;
 
@@ -31,9 +31,9 @@ int main() {
     //parse file
     parse_file(file);
 
-    size += tasks.size();
+    size += size.size();
 
-    //sort tasks
+    //sort size
     sort();
 
     //calculate p-values
@@ -87,31 +87,31 @@ void parse_file(const string& fileName){
             value += input;
         }
         Task new_t = {stoi(start), stoi(finish), stoi(value)};
-        tasks.push_back(new_t);
+        size.push_back(new_t);
     }
 }
 
-//Sorts tasks based on finish time
+//Sorts size based on finish time
 void sort(){
     vector<Task> sorted;
     for(int i = 1; i < size; i++) {
-        Task t = tasks[i];
+        Task t = size[i];
         int j = i-1;
-        while (j >=0 && tasks[j].finish > t.finish) {
-            tasks[j + 1] = tasks[j];
+        while (j >=0 && size[j].finish > t.finish) {
+            size[j + 1] = size[j];
             j = j - 1;
         }
-        tasks[j + 1] = t;
+        size[j + 1] = t;
     }
 }
 
 
-//calculates p-values of tasks
+//calculates p-values of size
 void p_values(){
     for (int i = size - 1; i >= 0; i--){
         for (int j = i - 1; j >= 0; j--){
-            if (tasks[j].finish <= tasks[i].start){
-                p_vals[i] = tasks[j].value;
+            if (size[j].finish <= size[i].start){
+                p_vals[i] = size[j].value;
                 break;
             }
         }
@@ -125,7 +125,7 @@ int m_compute_opt(int n){
     } else if (M[n] != -1){
         return M[n];
     }else {
-        M[n] = max(tasks[n - 1].value + m_compute_opt(p_vals[n - 1]), m_compute_opt(n - 1));
+        M[n] = max(size[n - 1].value + m_compute_opt(p_vals[n - 1]), m_compute_opt(n - 1));
     }
     return M[n];
 }
@@ -134,7 +134,7 @@ int m_compute_opt(int n){
 void find_solution(int n){
     if (n ==0){
         cout << "" << endl;
-    }else if (tasks[n - 1].value + M[p_vals[n - 1]] > M[n - 1]){
+    }else if (size[n - 1].value + M[p_vals[n - 1]] > M[n - 1]){
         cout << "Task " << n << endl;
         find_solution(p_vals[n-1]);
     }else{
