@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Weighted_Interval.dir/main.cpp.obj"
+  "CMakeFiles/Weighted_Interval.dir/main.cpp.obj.d"
   "Weighted_Interval.exe"
   "Weighted_Interval.exe.manifest"
   "Weighted_Interval.pdb"

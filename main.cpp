@@ -18,6 +18,7 @@ void sort();
 void p_values();
 int m_compute_opt(int n);
 void find_solution(int n);
+int size = 0;
 
 
 int main() {
@@ -30,27 +31,29 @@ int main() {
     //parse file
     parse_file(file);
 
+    size += tasks.size();
+
     //sort tasks
     sort();
 
     //calculate p-values
-    p_vals.reserve(tasks.size());
-    for (int i = 0; i < tasks.size(); i++){
+    p_vals.reserve(size);
+    for (int i = 0; i < size; i++){
         p_vals.push_back(0);
     }
     p_values();
 
 
     //Memoization
-    for (int i = 0; i <= tasks.size(); i++){
+    for (int i = 0; i <= size; i++){
         M[i] = -1;
     }
-    m_compute_opt(tasks.size());
-    cout << "The optimal weight is: " << M[tasks.size()] << endl;
+    m_compute_opt(size);
+    cout << "The optimal weight is: " << M[size] << endl;
 
     //Solution
     cout << "Optimal solution includes:" << endl;
-    find_solution(tasks.size());
+    find_solution(size);
     return 0;
 }
 
@@ -91,7 +94,7 @@ void parse_file(const string& fileName){
 //Sorts tasks based on finish time
 void sort(){
     vector<Task> sorted;
-    for(int i = 1; i < tasks.size(); i++) {
+    for(int i = 1; i < size; i++) {
         Task t = tasks[i];
         int j = i-1;
         while (j >=0 && tasks[j].finish > t.finish) {
@@ -105,7 +108,7 @@ void sort(){
 
 //calculates p-values of tasks
 void p_values(){
-    for (int i = tasks.size() - 1; i >= 0; i--){
+    for (int i = size - 1; i >= 0; i--){
         for (int j = i - 1; j >= 0; j--){
             if (tasks[j].finish <= tasks[i].start){
                 p_vals[i] = tasks[j].value;
