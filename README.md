@@ -21,11 +21,16 @@ It will then output the optimal weight and the task selection that provides that
 ## Program Creation
 This program was written in C++. 
 It begins by parsing the given file and storing the tasks in a vector.
+* This is achieved using getline() and then istringstream to read in each value of the line into its appropriate variables.
+* The start, finish and weight values are then used to create a new task and it is added to the tasks vector.
 
 Then the tasks are sorted in descending order of finish time. 
+* This is achieved using insertion sort to order the tasks.
 
 Next, the p-value for each task is created and stored in a vector.
+* P-values are calcuated by finding the next earliest task that is compatible with the current one.
 
 Then the vectors are used to calculate the optimal weight for the given tasks. This is done using memoization and storing the previously calculated values in a map. 
+* This is achieved by using the formula: M[j] = max(weight(j) + opt(p(j)), opt(j-1)) or by returning a previously calculated value
 
 Finally, the optimal weight is used to create the subset of tasks that produces the optimum. 
